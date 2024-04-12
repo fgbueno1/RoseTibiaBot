@@ -8,6 +8,7 @@ using System.Xml;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.DataFormats;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace RoseTibiaBot
 {
@@ -60,7 +61,7 @@ namespace RoseTibiaBot
         }
         public Positions positions = new Positions();
 
-        public Main(string winName)
+        public Main(string winName, JArray offsets)
         {
             InitializeComponent();
             string[] name = winName.Split('-');
@@ -73,8 +74,7 @@ namespace RoseTibiaBot
                 this.Close();
             }
             long baseAddress = (long)GetBaseAddress(processId);
-            long offset1 = 0xCFEBD0;
-            long pointerAddress = baseAddress + offset1;
+            long pointerAddress = baseAddress + (long)offsets[0];
 
             processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, processId);
             if (processHandle == IntPtr.Zero)
@@ -93,7 +93,7 @@ namespace RoseTibiaBot
                 return;
             }
 
-            finalAddress = (IntPtr)BitConverter.ToInt64(pointerBuffer, 0) + 0xD9;
+            finalAddress = (IntPtr)BitConverter.ToInt64(pointerBuffer, 0) + (IntPtr)offsets[1];
         }
 
         private int GetProcessIdByWindowName(string windowName)
