@@ -36,4 +36,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(ProjectDir)servers.json&quot; &quot;$(TargetDir)&quot;" />
+  </Target>
+
 </Project>
